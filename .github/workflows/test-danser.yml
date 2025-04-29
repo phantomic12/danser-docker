@@ -15,23 +15,49 @@ jobs:
       actions: write
       checks: write
 
+    container:
+      image: ghcr.io/${{ github.repository }}:latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          path: source
+          path: /app/source
 
-      - name: Run danser in container
+      - name: Create danser configuration
         run: |
-          docker run --rm \
-            -v "$(pwd)/source/songs:/app/songs" \
-            -v "$(pwd)/source/replay.osr:/app/replay.osr" \
-            -v "$(pwd)/output:/app/output" \
-            ghcr.io/${{ github.repository }}:latest \
-            -replay replay.osr -out test.mp4
+          mkdir -p /home/danser/.danser
+          cat > /home/danser/.danser/settings.json << EOF
+          {
+            "General": {
+              "OsuSongsDir": "/app/songs",
+              "OsuReplaysDir": "/app"
+            },
+            "Recording": {
+              "Encoder": "libx264",
+              "PixelFormat": "yuv420p",
+              "FPS": 60,
+              "Width": 1920,
+              "Height": 1080,
+              "OutputDir": "/app/output"
+            }
+          }
+          EOF
+
+      - name: Set up directories
+        run: |
+          mkdir -p /app/songs
+          mkdir -p /app/output
+          cp /app/source/songs/* /app/songs/ || true
+          cp /app/source/replay.osr /app/ || true
+
+      - name: Test danser functionality
+        run: |
+          # Run danser with the replay
+          danser-go -replay replay.osr -out test.mp4
 
       - name: Upload output video
         uses: actions/upload-artifact@v4
         with:
           name: danser-output
-          path: output/test.mp4 
+          path: /app/output/test.mp4 
