@@ -60,7 +60,7 @@ jobs:
           mkdir -p /app/output
           
           echo "--- Copying songs ---"
-          cp -v /app/source/songs/* /app/songs/ || echo "Failed to copy songs"
+          cp -vr /app/source/songs/* /app/songs/ || echo "Failed to copy songs"
           echo "--- Listing /app/songs contents after copy ---"
           ls -R /app/songs
           
