@@ -1,0 +1,53 @@
+name: Test Danser Functionality
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-danser:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/${{ github.repository }}:latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Create danser configuration
+        run: |
+          mkdir -p /home/danser/.danser
+          cat > /home/danser/.danser/settings.json << EOF
+          {
+            "General": {
+              "OsuSongsDir": "/app/songs",
+              "OsuReplaysDir": "/app"
+            },
+            "Recording": {
+              "Encoder": "libx264",
+              "PixelFormat": "yuv420p",
+              "FPS": 60,
+              "Width": 1920,
+              "Height": 1080,
+              "OutputDir": "/app/output"
+            }
+          }
+          EOF
+
+      - name: Create output directory
+        run: mkdir -p /app/output
+
+      - name: Test danser functionality
+        run: |
+          # Run danser with the replay
+          danser-go -replay replay.osr -out test.mp4
+
+      - name: Upload output video
+        uses: actions/upload-artifact@v3
+        with:
+          name: danser-output
+          path: /app/output/test.mp4 

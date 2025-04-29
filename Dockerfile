@@ -10,17 +10,17 @@ RUN apk add --no-cache \
     mesa-gles \
     xrandr \
     wget \
-    tar
+    unzip
 
 # Set the working directory
 WORKDIR /app
 
-# Download and extract the latest danser-go release
-RUN wget https://github.com/Wieku/danser-go/releases/latest/download/danser-go_linux_amd64.tar.gz && \
-    tar -xzf danser-go_linux_amd64.tar.gz && \
-    rm danser-go_linux_amd64.tar.gz && \
-    mv danser-go_linux_amd64/danser-go /usr/local/bin/ && \
-    rm -rf danser-go_linux_amd64
+# Download and extract danser-go 0.11.0
+RUN wget https://github.com/Wieku/danser-go/releases/download/0.11.0/danser-0.11.0-linux.zip && \
+    unzip danser-0.11.0-linux.zip && \
+    rm danser-0.11.0-linux.zip && \
+    mv danser-0.11.0-linux/danser-go /usr/local/bin/ && \
+    rm -rf danser-0.11.0-linux
 
 # Create a non-root user
 RUN adduser -D -g '' danser
