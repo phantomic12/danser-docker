@@ -89,9 +89,10 @@ jobs:
           chown -R danser:danser /app/output
           chown -R danser:danser /usr/local/bin/settings
 
-          # Run danser within a virtual display server AS the danser user
-          runuser -u danser -- xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \
-          danser-go -settings=ci-settings -replay /app/replay.osr -out /app/output/test.mp4
+          # CD to a writable directory before executing as danser user
+          cd /app
+          runuser -u danser -- /usr/bin/xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \
+          /usr/local/bin/danser-go -settings=ci-settings -replay /app/replay.osr -out /app/output/test.mp4
 
       - name: Upload output video
         uses: actions/upload-artifact@v4
