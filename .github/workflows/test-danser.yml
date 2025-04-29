@@ -85,14 +85,9 @@ jobs:
           LD_LIBRARY_PATH: /usr/local/lib
           # DISPLAY variable will be set by xvfb-run
         run: |
-          # Ensure danser user owns the output dir and settings dir for writing
-          chown -R danser:danser /app/output
-          chown -R danser:danser /usr/local/bin/settings
-
-          # CD to a writable directory before executing as danser user
-          cd /app
-          runuser -u danser -- /usr/bin/xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \
-          /usr/local/bin/danser-go -settings=ci-settings -replay /app/replay.osr -out /app/output/test.mp4
+          # Run danser within a virtual display server (as container user - root)
+          xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \
+          danser-go -settings=ci-settings -replay /app/replay.osr -out /app/output/test.mp4
 
       - name: Upload output video
         uses: actions/upload-artifact@v4
