@@ -19,8 +19,10 @@ WORKDIR /app
 RUN wget https://github.com/Wieku/danser-go/releases/download/0.11.0/danser-0.11.0-linux.zip && \
     unzip danser-0.11.0-linux.zip && \
     rm danser-0.11.0-linux.zip && \
-    mv danser-0.11.0-linux/danser-go /usr/local/bin/ && \
-    rm -rf danser-0.11.0-linux
+    mv danser /usr/local/bin/danser-go && \
+    mv ffmpeg/* /usr/local/bin/ && \
+    mv *.so /usr/local/lib/ && \
+    rm -rf ffmpeg
 
 # Create a non-root user
 RUN adduser -D -g '' danser
