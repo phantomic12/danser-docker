@@ -85,8 +85,12 @@ jobs:
           LD_LIBRARY_PATH: /usr/local/lib
           # DISPLAY variable will be set by xvfb-run
         run: |
-          # Run danser within a virtual display server
-          xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \
+          # Ensure danser user owns the output dir and settings dir for writing
+          chown -R danser:danser /app/output
+          chown -R danser:danser /usr/local/bin/settings
+
+          # Run danser within a virtual display server AS the danser user
+          runuser -u danser -- xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \
           danser-go -settings=ci-settings -replay /app/replay.osr -out /app/output/test.mp4
 
       - name: Upload output video
