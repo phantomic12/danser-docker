@@ -31,8 +31,8 @@ jobs:
 
       - name: Create danser configuration
         run: |
-          mkdir -p /root/.danser
-          cat > /root/.danser/settings.json << EOF
+          mkdir -p /usr/local/bin/settings
+          cat > /usr/local/bin/settings/ci-settings.json << EOF
           {
             "General": {
               "OsuSongsDir": "/app/songs",
@@ -69,8 +69,8 @@ jobs:
         env:
           LD_LIBRARY_PATH: /usr/local/lib
         run: |
-          # Run danser with the replay
-          danser-go -replay replay.osr -out test.mp4
+          # Run danser with the replay using specific settings file name
+          danser-go -settings=ci-settings -replay /app/replay.osr -out /app/output/test.mp4
 
       - name: Upload output video
         uses: actions/upload-artifact@v4
