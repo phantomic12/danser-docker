@@ -17,6 +17,7 @@ jobs:
 
     container:
       image: ghcr.io/${{ github.repository }}:latest
+      options: --user root
 
     steps:
       - name: Checkout repository
