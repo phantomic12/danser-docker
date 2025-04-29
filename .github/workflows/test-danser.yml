@@ -51,10 +51,23 @@ jobs:
 
       - name: Set up directories
         run: |
+          echo "--- Listing /app/source contents ---"
+          ls -R /app/source
+          echo "--- Listing /app/source/songs contents ---"
+          ls -R /app/source/songs || echo "/app/source/songs not found or empty"
+          
           mkdir -p /app/songs
           mkdir -p /app/output
-          cp /app/source/songs/* /app/songs/ || true
-          cp /app/source/replay.osr /app/ || true
+          
+          echo "--- Copying songs ---"
+          cp -v /app/source/songs/* /app/songs/ || echo "Failed to copy songs"
+          echo "--- Listing /app/songs contents after copy ---"
+          ls -R /app/songs
+          
+          echo "--- Copying replay ---"
+          cp -v /app/source/replay.osr /app/ || echo "Failed to copy replay"
+          echo "--- Listing /app contents after replay copy ---"
+          ls -R /app
 
       - name: Check for GTK library and ldconfig
         run: |
