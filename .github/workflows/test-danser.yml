@@ -81,8 +81,10 @@ jobs:
       - name: Test danser functionality
         env:
           LD_LIBRARY_PATH: /usr/local/lib
+          # DISPLAY variable will be set by xvfb-run
         run: |
-          # Run danser with the replay using specific settings file name
+          # Run danser within a virtual display server
+          xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \
           danser-go -settings=ci-settings -replay /app/replay.osr -out /app/output/test.mp4
 
       - name: Upload output video
