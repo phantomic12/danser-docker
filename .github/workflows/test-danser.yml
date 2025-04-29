@@ -23,39 +23,20 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          # Prevent git from changing line endings, which can affect hashes
+          autocrlf: 'false'
 
       - name: Copy files to required locations
-        run: |
-          mkdir -p /app/source
-          cp -r . /app/source/
-
-      - name: Create danser configuration
-        run: |
-          mkdir -p /usr/local/bin/settings
-          cat > /usr/local/bin/settings/ci-settings.json << EOF
-          {
-            "General": {
-              "OsuSongsDir": "/app/songs",
-              "OsuReplaysDir": "/app"
-            },
-            "Recording": {
-              "Encoder": "libx264",
-              "PixelFormat": "yuv420p",
-              "FPS": 60,
-              "Width": 1920,
-              "Height": 1080,
-              "OutputDir": "/app/output"
-            }
-          }
-          EOF
-
-      - name: Set up directories
         run: |
           echo "--- Listing /app/source contents ---"
           ls -R /app/source
           echo "--- Listing /app/source/songs contents ---"
           ls -R /app/source/songs || echo "/app/source/songs not found or empty"
           
+          echo "--- Calculating MD5 hashes for SOURCE .osu files in /app/source/songs ---"
+          find /app/source/songs -name '*.osu' -exec md5sum {} \;
+
           mkdir -p /app/songs
           mkdir -p /app/output
           
@@ -79,9 +60,9 @@ jobs:
           LD_LIBRARY_PATH: /usr/local/lib
           # DISPLAY variable will be set by xvfb-run
         run: |
-          # Run danser within a virtual display server with debug flag
-          xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \
-          danser-go -debug -settings=ci-settings -replay /app/replay.osr -out /app/output/test.mp4
+          # Run danser within a virtual display server
+          xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \\
+          danser-go -settings=ci-settings -replay /app/replay.osr -out /app/output/test.mp4
 
       - name: Upload output video
         uses: actions/upload-artifact@v4
