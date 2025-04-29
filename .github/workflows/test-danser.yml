@@ -22,8 +22,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          path: /app/source
+
+      - name: Copy files to required locations
+        run: |
+          mkdir -p /app/source
+          cp -r . /app/source/
 
       - name: Create danser configuration
         run: |
