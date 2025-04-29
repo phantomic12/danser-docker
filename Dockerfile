@@ -1,16 +1,16 @@
-# Use alpine as the base image
-FROM alpine:latest
+# Use Ubuntu as the base image
+FROM ubuntu:22.04
 
-# Install runtime dependencies including Xvfb and OpenGL
-RUN apk add --no-cache \
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y \
     ffmpeg \
     xvfb \
-    mesa-dri-gallium \
-    mesa-egl \
-    mesa-gles \
-    xrandr \
+    mesa-utils \
+    libgl1-mesa-glx \
+    libgl1-mesa-dri \
     wget \
-    unzip
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory
 WORKDIR /app
@@ -26,7 +26,7 @@ RUN wget https://github.com/Wieku/danser-go/releases/download/0.11.0/danser-0.11
     chmod +x /usr/local/bin/danser-go
 
 # Create a non-root user
-RUN adduser -D -g '' danser && \
+RUN useradd -m -s /bin/bash danser && \
     mkdir -p /home/danser/.danser && \
     chown -R danser:danser /home/danser/.danser
 
