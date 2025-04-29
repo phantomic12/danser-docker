@@ -29,6 +29,31 @@ jobs:
 
       - name: Copy files to required locations
         run: |
+          mkdir -p /app/source
+          cp -r . /app/source/
+
+      - name: Create danser configuration
+        run: |
+          mkdir -p /usr/local/bin/settings
+          cat > /usr/local/bin/settings/ci-settings.json << EOF
+          {
+            "General": {
+              "OsuSongsDir": "/app/songs",
+              "OsuReplaysDir": "/app"
+            },
+            "Recording": {
+              "Encoder": "libx264",
+              "PixelFormat": "yuv420p",
+              "FPS": 60,
+              "Width": 1920,
+              "Height": 1080,
+              "OutputDir": "/app/output"
+            }
+          }
+          EOF
+
+      - name: Set up directories
+        run: |
           echo "--- Listing /app/source contents ---"
           ls -R /app/source
           echo "--- Listing /app/source/songs contents ---"
@@ -52,7 +77,7 @@ jobs:
 
       - name: Calculate beatmap hashes
         run: |
-          echo "--- Calculating MD5 hashes for .osu files in /app/songs ---"
+          echo "--- Calculating MD5 hashes for COPIED .osu files in /app/songs ---"
           find /app/songs -name '*.osu' -exec md5sum {} \;
 
       - name: Test danser functionality
