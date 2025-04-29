@@ -20,7 +20,7 @@ WORKDIR /app
 RUN wget https://github.com/Wieku/danser-go/releases/download/0.11.0/danser-0.11.0-linux.zip && \
     unzip danser-0.11.0-linux.zip && \
     rm danser-0.11.0-linux.zip && \
-    mv danser /usr/local/bin/danser-go && \
+    mv danser-cli /usr/local/bin/danser-go && \
     mv ffmpeg/* /usr/local/bin/ && \
     mv *.so /usr/local/lib/ && \
     rm -rf ffmpeg && \

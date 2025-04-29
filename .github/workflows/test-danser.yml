@@ -56,6 +56,15 @@ jobs:
           cp /app/source/songs/* /app/songs/ || true
           cp /app/source/replay.osr /app/ || true
 
+      - name: Check for GTK library and ldconfig
+        run: |
+          echo "--- Checking for libgtk-3.so.0 ---"
+          find /usr/lib -name "libgtk-3.so.0"
+          echo "--- Checking ldconfig cache ---"
+          ldconfig -p | grep libgtk || echo "libgtk not found in ldconfig cache"
+          echo "--- Checking LD_LIBRARY_PATH ---"
+          echo $LD_LIBRARY_PATH
+
       - name: Test danser functionality
         env:
           LD_LIBRARY_PATH: /usr/local/lib
