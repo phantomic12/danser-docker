@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     mesa-utils \
     libgl1-mesa-glx \
     libgl1-mesa-dri \
+    libgtk-3-0 \
     wget \
     unzip \
     && rm -rf /var/lib/apt/lists/*
