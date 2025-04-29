@@ -22,15 +22,24 @@ RUN wget https://github.com/Wieku/danser-go/releases/download/0.11.0/danser-0.11
     mv danser /usr/local/bin/danser-go && \
     mv ffmpeg/* /usr/local/bin/ && \
     mv *.so /usr/local/lib/ && \
-    rm -rf ffmpeg
+    rm -rf ffmpeg && \
+    chmod +x /usr/local/bin/danser-go
 
 # Create a non-root user
-RUN adduser -D -g '' danser
-USER danser
+RUN adduser -D -g '' danser && \
+    mkdir -p /home/danser/.danser && \
+    chown -R danser:danser /home/danser/.danser
+
+# Create output directory
+RUN mkdir -p /app/output && \
+    chown -R danser:danser /app/output
 
 # Create a script to start Xvfb and run danser-go
 COPY --chown=danser:danser entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
+
+USER danser
+WORKDIR /app
 
 # Set the entrypoint
 ENTRYPOINT ["/app/entrypoint.sh"] 
