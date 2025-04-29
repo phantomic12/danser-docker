@@ -56,6 +56,8 @@ jobs:
           cp /app/source/replay.osr /app/ || true
 
       - name: Test danser functionality
+        env:
+          LD_LIBRARY_PATH: /usr/local/lib
         run: |
           # Run danser with the replay
           danser-go -replay replay.osr -out test.mp4
