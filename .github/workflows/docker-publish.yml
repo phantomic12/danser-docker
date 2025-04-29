@@ -3,8 +3,12 @@ name: Docker Build and Push
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - '.github/workflows/test-danser.yml'
   pull_request:
     branches: [ main ]
+    paths-ignore:
+      - '.github/workflows/test-danser.yml'
 
 env:
   REGISTRY: ghcr.io
