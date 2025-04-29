@@ -5,19 +5,22 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch:
 
 jobs:
   test-danser:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      actions: write
+      checks: write
+
     container:
       image: ghcr.io/${{ github.repository }}:latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v3
 
       - name: Create danser configuration
         run: |
@@ -48,7 +51,7 @@ jobs:
           danser-go -replay replay.osr -out test.mp4
 
       - name: Upload output video
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: danser-output
           path: /app/output/test.mp4 
