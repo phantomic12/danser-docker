@@ -51,7 +51,7 @@ jobs:
           danser-go -replay replay.osr -out test.mp4
 
       - name: Upload output video
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: danser-output
           path: /app/output/test.mp4 
