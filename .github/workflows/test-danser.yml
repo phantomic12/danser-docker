@@ -69,14 +69,10 @@ jobs:
           echo "--- Listing /app contents after replay copy ---"
           ls -R /app
 
-      - name: Check for GTK library and ldconfig
+      - name: Calculate beatmap hashes
         run: |
-          echo "--- Checking for libgtk-3.so.0 ---"
-          find /usr/lib -name "libgtk-3.so.0"
-          echo "--- Checking ldconfig cache ---"
-          ldconfig -p | grep libgtk || echo "libgtk not found in ldconfig cache"
-          echo "--- Checking LD_LIBRARY_PATH ---"
-          echo $LD_LIBRARY_PATH
+          echo "--- Calculating MD5 hashes for .osu files in /app/songs ---"
+          find /app/songs -name '*.osu' -exec md5sum {} \;
 
       - name: Test danser functionality
         env:
