@@ -63,7 +63,7 @@ jobs:
           LD_LIBRARY_PATH: /usr/local/lib
         run: |
           # Run danser-cli within a virtual display server
-          cd /app && export DISPLAY=:1 && Xvfb :1 -screen 0 1920x1080x24 & sleep 1 && ./danser-cli -settings /app/settings/settings.json -replay replay.osr -out output/test.mp4
+          cd /app && export DISPLAY=:1 && Xvfb :1 -screen 0 1920x1080x24 & sleep 1 && danser-cli -settings /app/settings/settings.json -replay replay.osr -out output/test.mp4
 
       - name: Upload output video
         uses: actions/upload-artifact@v4
