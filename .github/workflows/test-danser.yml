@@ -21,7 +21,7 @@ jobs:
       checks: write
 
     container:
-      image: ghcr.io/${{ github.repository }}:${{ matrix.danser_version }}
+      image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/danser-docker:${{ matrix.danser_version }}
       options: --user root
 
     steps:
