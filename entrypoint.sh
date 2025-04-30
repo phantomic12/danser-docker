@@ -1,11 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
-# Start Xvfb on display :1
-Xvfb :1 -screen 0 1920x1080x24 &
-sleep 1
+# Start Xvfb
+Xvfb :99 -screen 0 1920x1080x24 &
+export DISPLAY=:99
 
-# Set the DISPLAY environment variable
-export DISPLAY=:1
-
-# Run danser-go with the provided arguments
-exec danser-go "$@" 
+# Run danser with the provided arguments
+exec /app/danser "$@" 

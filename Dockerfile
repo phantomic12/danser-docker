@@ -1,31 +1,37 @@
 # Use Ubuntu as the base image
 FROM ubuntu:22.04
 
-# Install runtime dependencies
+# Add build argument for Danser version
+ARG DANSER_VERSION=0.11.0
+
+# Install required packages
 RUN apt-get update && apt-get install -y \
-    ffmpeg \
-    xvfb \
-    mesa-utils \
-    libgl1-mesa-glx \
-    libgl1-mesa-dri \
-    libgtk-3-0 \
     wget \
     unzip \
+    xvfb \
+    libgl1-mesa-dev \
+    libopengl0 \
+    libx11-6 \
+    libxcursor1 \
+    libxrandr2 \
+    libxinerama1 \
+    libxi6 \
+    libxext6 \
+    libxfixes3 \
+    mesa-utils \
     && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory
 WORKDIR /app
 
-# Download and extract danser-go 0.11.0
-RUN wget https://github.com/Wieku/danser-go/releases/download/0.11.0/danser-0.11.0-linux.zip && \
-    unzip danser-0.11.0-linux.zip && \
-    rm danser-0.11.0-linux.zip && \
-    mv danser-cli /usr/local/bin/danser-go && \
-    mv assets.dpak /usr/local/bin/ && \
-    mv ffmpeg/* /usr/local/bin/ && \
-    mv *.so /usr/local/lib/ && \
-    rm -rf ffmpeg && \
-    chmod +x /usr/local/bin/danser-go
+# Download and install Danser
+RUN wget https://github.com/Wieku/danser-go/releases/download/${DANSER_VERSION}/danser-${DANSER_VERSION}-linux.zip \
+    && unzip danser-${DANSER_VERSION}-linux.zip \
+    && rm danser-${DANSER_VERSION}-linux.zip \
+    && chmod +x danser
+
+# Create necessary directories
+RUN mkdir -p /app/songs /app/skins /app/output
 
 # Create a non-root user
 RUN useradd -m -s /bin/bash danser && \
@@ -37,11 +43,14 @@ RUN mkdir -p /app/output && \
     chown -R danser:danser /app/output
 
 # Create a script to start Xvfb and run danser-go
-COPY --chown=danser:danser entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
+COPY --chown=danser:danser entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 USER danser
 WORKDIR /app
 
+# Default command (can be overridden)
+CMD ["danser-go", "--help"]
+
 # Set the entrypoint
-ENTRYPOINT ["/app/entrypoint.sh"] 
+ENTRYPOINT ["/entrypoint.sh"] 
