@@ -31,19 +31,12 @@ jobs:
           # Prevent git from changing line endings, which can affect hashes
           autocrlf: 'false'
 
-      - name: Copy files to required locations
-        run: |
-          mkdir -p /app/source
-          cp -r . /app/source/
-
       - name: Create danser directories
         run: |
           mkdir -p /app/settings
-          mkdir -p /app/songs
+          mkdir -p /github/home/.osu/Songs
           mkdir -p /app/skins
           mkdir -p /app/output
-          mkdir -p /github/home/.osu/Songs
-          ln -s /app/songs /github/home/.osu/Songs
 
       - name: Copy and verify CI settings file
         run: |
@@ -52,39 +45,26 @@ jobs:
           ls -la /app/settings/
           cat /app/settings/settings.json
 
-      - name: Set up directories
+      - name: Set up songs
         run: |
-          echo "--- Listing /app/source contents ---"
-          ls -R /app/source
-          echo "--- Listing /app/source/songs contents ---"
-          ls -R /app/source/songs || echo "/app/source/songs not found or empty"
+          # Copy songs to the osu songs directory
+          cp -rv songs/* /github/home/.osu/Songs/ || echo "No songs to copy"
+          chown -R danser:danser /github/home/.osu
           
-          echo "--- Calculating MD5 hashes for SOURCE .osu files in /app/source/songs ---"
-          find /app/source/songs -name '*.osu' -exec md5sum {} \;
-
-          echo "--- Copying songs ---"
-          cp -vr /app/source/songs/* /app/songs/ || echo "Failed to copy songs"
-          echo "--- Listing /app/songs contents after copy ---"
-          ls -R /app/songs
+          echo "--- Listing Songs directory contents ---"
+          ls -R /github/home/.osu/Songs/
           
           echo "--- Copying replay ---"
-          cp -v /app/source/replay.osr /app/ || echo "Failed to copy replay"
-          echo "--- Listing /app contents after replay copy ---"
-          ls -R /app
-
-      - name: Calculate beatmap hashes
-        run: |
-          echo "--- Calculating MD5 hashes for COPIED .osu files in /app/songs ---"
-          find /app/songs -name '*.osu' -exec md5sum {} \;
+          cp -v replay.osr /app/ || echo "No replay to copy"
+          chown danser:danser /app/replay.osr || true
 
       - name: Test danser functionality
         env:
           LD_LIBRARY_PATH: /usr/local/lib
-          # DISPLAY variable will be set by xvfb-run
         run: |
           # Run danser-cli within a virtual display server
-          xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \
-          /app/danser-cli -settings=/app/settings/settings -replay /app/replay.osr -out /app/output/test.mp4
+          cd /app && xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \
+          ./danser-cli -settings /app/settings/settings.json -replay replay.osr -out output/test.mp4
 
       - name: Upload output video
         uses: actions/upload-artifact@v4
