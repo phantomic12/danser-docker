@@ -19,6 +19,12 @@ RUN apt-get update && apt-get install -y \
     libxext6 \
     libxfixes3 \
     mesa-utils \
+    libgtk-3-0 \
+    libglib2.0-0 \
+    libpango-1.0-0 \
+    libcairo2 \
+    libatk1.0-0 \
+    libgdk-pixbuf2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory
