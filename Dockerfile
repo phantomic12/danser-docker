@@ -25,10 +25,10 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Download and install Danser
-RUN wget https://github.com/Wieku/danser-go/releases/download/${DANSER_VERSION}/danser-${DANSER_VERSION}-linux.zip \
-    && unzip danser-${DANSER_VERSION}-linux.zip \
-    && rm danser-${DANSER_VERSION}-linux.zip \
-    && chmod +x danser
+RUN wget https://github.com/spookyfox-dev/danser-cli/releases/download/${DANSER_VERSION}/danser-cli-${DANSER_VERSION}-linux.zip \
+    && unzip danser-cli-${DANSER_VERSION}-linux.zip \
+    && rm danser-cli-${DANSER_VERSION}-linux.zip \
+    && chmod +x danser-cli
 
 # Create necessary directories
 RUN mkdir -p /app/songs /app/skins /app/output
@@ -42,7 +42,7 @@ RUN useradd -m -s /bin/bash danser && \
 RUN mkdir -p /app/output && \
     chown -R danser:danser /app/output
 
-# Create a script to start Xvfb and run danser-go
+# Create a script to start Xvfb and run danser-cli
 COPY --chown=danser:danser entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
@@ -50,7 +50,7 @@ USER danser
 WORKDIR /app
 
 # Default command (can be overridden)
-CMD ["danser-go", "--help"]
+CMD ["danser-cli", "--help"]
 
 # Set the entrypoint
 ENTRYPOINT ["/entrypoint.sh"] 
