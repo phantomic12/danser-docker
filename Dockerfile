@@ -25,10 +25,10 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Download and install Danser
-RUN wget https://github.com/spookyfox-dev/danser-cli/releases/download/${DANSER_VERSION}/danser-cli-${DANSER_VERSION}-linux.zip \
-    && unzip danser-cli-${DANSER_VERSION}-linux.zip \
-    && rm danser-cli-${DANSER_VERSION}-linux.zip \
-    && chmod +x danser-cli
+RUN wget https://github.com/Wieku/danser-go/releases/download/${DANSER_VERSION}/danser-${DANSER_VERSION}-linux.zip \
+    && unzip danser-${DANSER_VERSION}-linux.zip \
+    && rm danser-${DANSER_VERSION}-linux.zip \
+    && chmod +x danser
 
 # Create necessary directories
 RUN mkdir -p /app/songs /app/skins /app/output
