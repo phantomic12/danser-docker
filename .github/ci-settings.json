@@ -10,13 +10,13 @@
 	"Graphics": {
 		"Width": 1920,
 		"Height": 1080,
-		"WindowWidth": 1440,
-		"WindowHeight": 810,
+		"WindowWidth": 1920,
+		"WindowHeight": 1080,
 		"Fullscreen": false,
 		"VSync": false,
-		"FPSCap": 0,
+		"FPSCap": 60,
 		"MSAA": 0,
-		"ShowFPS": true,
+		"ShowFPS": false,
 		"Experimental": {
 			"UsePersistentBuffers": false
 		}
@@ -106,6 +106,7 @@
 		"FPS": 60,
 		"EncodingFPSCap": 0,
 		"Encoder": "libx264",
+		"EncoderOptions": "-crf 23",
 		"libx264": { "RateControl": "crf", "Bitrate": "10M", "CRF": 14, "Profile": "high", "Preset": "faster", "AdditionalOptions": "" },
 		"libx265": { "RateControl": "crf", "Bitrate": "10M", "CRF": 18, "Profile": "main", "Preset": "fast", "AdditionalOptions": "" },
 		"libsvtav1": { "RateControl": "crf", "Bitrate": "10M", "CRF": 22, "Profile": "main", "Preset": "7", "AdditionalOptions": "" },
@@ -130,7 +131,8 @@
 		"OutputDir": "/app/output",
 		"Container": "mp4",
 		"ShowFFmpegLogs": true,
-		"MotionBlur": { "Enabled": false, "OversampleMultiplier": 3, "BlendFrames": 5, "BlendFunctionID": 1, "GaussWeightsMult": 1.5 }
+		"MotionBlur": { "Enabled": false, "OversampleMultiplier": 3, "BlendFrames": 5, "BlendFunctionID": 1, "GaussWeightsMult": 1.5 },
+		"Preview": false
 	},
 	"Debug": {
 		"PerfGraph": {
