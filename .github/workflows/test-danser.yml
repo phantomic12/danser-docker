@@ -63,7 +63,7 @@ jobs:
           LD_LIBRARY_PATH: /usr/local/lib
         run: |
           # Run danser-cli within a virtual display server
-          cd /app && xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \
+          cd /app &&
           ./danser-cli -settings /app/settings/settings.json -replay replay.osr -out output/test.mp4
 
       - name: Upload output video
