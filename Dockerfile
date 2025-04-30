@@ -28,7 +28,7 @@ WORKDIR /app
 RUN wget https://github.com/Wieku/danser-go/releases/download/${DANSER_VERSION}/danser-${DANSER_VERSION}-linux.zip \
     && unzip danser-${DANSER_VERSION}-linux.zip \
     && rm danser-${DANSER_VERSION}-linux.zip \
-    && chmod +x danser
+    && chmod +x danser-cli
 
 # Create necessary directories
 RUN mkdir -p /app/songs /app/skins /app/output
