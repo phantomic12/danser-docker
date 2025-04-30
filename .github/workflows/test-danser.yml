@@ -21,7 +21,7 @@ jobs:
       checks: write
 
     container:
-      image: docker.io/phantomic12/danser-docker:${{ matrix.danser_version }}
+      image: docker.io/phantomic/danser-docker:${{ matrix.danser_version }}
       options: --user root
 
     steps:
