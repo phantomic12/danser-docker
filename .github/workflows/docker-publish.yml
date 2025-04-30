@@ -18,9 +18,12 @@ jobs:
       matrix:
         danser_version: ['0.11.0', '0.10.0', '0.9.0']
       fail-fast: false
+
+    # Add permissions at job level
     permissions:
       contents: read
       packages: write
+      id-token: write
 
     steps:
       - name: Checkout repository
@@ -46,7 +49,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: true
+          push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
