@@ -1,5 +1,5 @@
 # Use Ubuntu as the base image
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 # Add build argument for Danser version
 ARG DANSER_VERSION=0.11.0
